@@ -9,7 +9,14 @@ class mainWindowUI(object):
             MainWindow.setObjectName(u"MainWindow")
 
         self.buttonTest = QtWidgets.QPushButton()
-        self.buttonTest.setText("Convert Flac to Mp3")
+        self.buttonTest.setText("Convert to Mp3")
+
+        self.convertTypeDropDown = QtWidgets.QComboBox()
+        self.convertTypeDropDown.addItem("mp3")
+        self.convertTypeDropDown.addItem("flac")
+        self.convertTypeDropDown.addItem("aac")
+        self.convertTypeDropDown.addItem("wav")
+        self.convertTypeDropDown.addItem("ogg")
 
         self.buttonTest2 = QtWidgets.QPushButton()
         self.buttonTest2.setText("Select Source File Dir")
@@ -26,7 +33,8 @@ class mainWindowUI(object):
         self.mainLayout = QtWidgets.QGridLayout()
         self.mainLayout.addWidget(self.buttonTest, 1, 1)
         self.mainLayout.addWidget(self.buttonTest2, 1, 0)
-        self.mainLayout.addWidget(self.buttonTest3, 1, 3)
+        self.mainLayout.addWidget(self.buttonTest3, 1, 2)
 
         self.mainLayout.addWidget(self.labelTest, 0, 0)
-        self.mainLayout.addWidget(self.labelTest2, 0, 3)
+        self.mainLayout.addWidget(self.labelTest2, 0, 2)
+        self.mainLayout.addWidget(self.convertTypeDropDown, 2, 1)

@@ -13,6 +13,8 @@ import subprocess
 import pathlib
 from pathlib import Path
 
+import ffmpeg #TO DO, PORT FFMPEG LIBRARY INSTEAD OF DIRECTLY RUNNING FFmpeg.exe as a CLI Tool
+
 import time
 
 import HelperClass
@@ -29,14 +31,8 @@ class MainWidget(QtWidgets.QMainWindow): #Main Class
         self.internalData =  HelperClass.internalData()
 
         self.sourceFileDirectory = ""
-        self.targetFileDirectory = HOMEDIR + r'\ConvertedFiles' #default should be here
+        self.targetFileDirectory = HOMEDIR + r"\ConvertedFiles" #default should be here
         self.targetFileFormat = '.mp3'
-
-        '''
-        sourceFileDirectory = ""
-        targetFileDirectory = homeDir + r'\ConvertedFiles' #default should be here
-        targetFileFormat = '.mp3'
-        '''
 
         self.mainWindowUI = MainWindow.mainWindowUI()
         self.mainWindowUI.setup(self)
@@ -55,6 +51,10 @@ class MainWidget(QtWidgets.QMainWindow): #Main Class
         self.mainWindowUI.buttonTest2.clicked.connect(lambda x: self.selectSourceFilePath())
         self.mainWindowUI.buttonTest3.clicked.connect(lambda x: self.selectDestinationPath())
 
+        self.mainWindowUI.convertTypeDropDown.currentIndexChanged.connect(lambda x: self.setTargetFileFormat())
+
+        
+
     @QtCore.Slot()    
     def convertFile(self):
 
@@ -63,33 +63,32 @@ class MainWidget(QtWidgets.QMainWindow): #Main Class
 
         #try: #if Source Directory is valid
         if (os.path.exists(self.sourceFileDirectory) == True): 
-            string = f'ffmpeg.exe -i ' + self.sourceFileDirectory + f' -ab 320k -map_metadata 0 -id3v2_version 3 ' + self.targetFileDirectory + f'\\' + targetFileName
+            #\" for path name exceptions (Ex. spaces), \\ to allow for appending file path name
+            string = f'ffmpeg.exe -i ' + "\"" +  self.sourceFileDirectory + "\"" + f' -ab 320k -map_metadata 0 -id3v2_version 3 ' +  "\"" + self.targetFileDirectory + f'\\' + targetFileName + "\"" 
+            print (string)
 
-            process = subprocess.Popen(string, cwd=FFMPEGDIR, =,shell = True) # shell = true, security issue?
+            process = subprocess.Popen(string, cwd=FFMPEGDIR, shell = True) # shell = true, security issue?
 
-            #status = process.poll() 
-
-        '''
-        def execute(): #coroutine
+        
+        def execute(process): #coroutine
             while (True):
-                status = process.poll() 
-
-                if (status is None):
-                    print ("Conversion Finished")
+                
+                if (process.poll() is None):
+                    print ("Conversion Finished") #NON FUNCTIONAL
                     break
 
                 time.sleep(1)
-        '''
+        
 
-        #thread = WorkerThread(execute)
-        #self.threadpool.start(thread)
+        thread = WorkerThread(execute, process)
+        self.threadpool.start(thread)
+        
 
         #except:
         #    print ("ERROR, unknown error")     
     
     @QtCore.Slot()   
     def selectSourceFilePath(self):
-
         tkinter.Tk().withdraw() # prevents an empty tkinter window from appearing
         self.sourceFileDirectory = filedialog.askopenfilename()
 
@@ -97,11 +96,15 @@ class MainWidget(QtWidgets.QMainWindow): #Main Class
 
     @QtCore.Slot()   
     def selectDestinationPath(self):
-
         tkinter.Tk().withdraw() # prevents an empty tkinter window from appearing
         self.targetFileDirectory = filedialog.askdirectory()
-
+        
         self.mainWindowUI.labelTest2.setText("Target File Path: \n" + self.targetFileDirectory)
+
+    @QtCore.Slot()
+    def setTargetFileFormat(self):
+        self.targetFileFormat = "." + self.mainWindowUI.convertTypeDropDown.currentText()
+
 
 #Multithreading
 class WorkerThread(QtCore.QRunnable):
