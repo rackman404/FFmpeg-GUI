@@ -6,7 +6,6 @@ import PySide6.QtWidgets
 import tkinter
 from tkinter import filedialog
 
-import MainWindow
 
 import os 
 import subprocess
@@ -18,8 +17,9 @@ import ffmpeg #TO DO, PORT FFMPEG LIBRARY INSTEAD OF DIRECTLY RUNNING FFmpeg.exe
 import time
 
 import HelperClass
+from components import MainWindow
 
-#constants
+#constants - windows
 HOMEDIR = os.path.dirname(os.path.realpath(__file__)) #gets the actual path (including python script name), then gets the directory, then appends the ffmpeg location
 FFMPEGDIR = os.path.dirname(os.path.realpath(__file__)) + r'\ffmpeg'
 
@@ -38,7 +38,7 @@ class MainWidget(QtWidgets.QMainWindow): #Main Class
         self.mainWindowUI.setup(self)
 
         #intial GUI setup
-        self.mainWindowUI.labelTest2.setText('Target File Path: \n' + self.targetFileDirectory)
+        self.mainWindowUI.FileConversion.labelTest2.setText('Target File Path: \n' + self.targetFileDirectory)
 
         self.setWindowTitle("Minimal FFmpeg GUI")
         
@@ -47,11 +47,11 @@ class MainWidget(QtWidgets.QMainWindow): #Main Class
         self.setCentralWidget(widget)
 
         #signal - interactions
-        self.mainWindowUI.buttonTest.clicked.connect(lambda x: self.convertFile())
-        self.mainWindowUI.buttonTest2.clicked.connect(lambda x: self.selectSourceFilePath())
-        self.mainWindowUI.buttonTest3.clicked.connect(lambda x: self.selectDestinationPath())
+        self.mainWindowUI.FileConversion.buttonTest.clicked.connect(lambda x: self.convertFile())
+        self.mainWindowUI.FileConversion.buttonTest2.clicked.connect(lambda x: self.selectSourceFilePath())
+        self.mainWindowUI.FileConversion.buttonTest3.clicked.connect(lambda x: self.selectDestinationPath())
 
-        self.mainWindowUI.convertTypeDropDown.currentIndexChanged.connect(lambda x: self.setTargetFileFormat())
+        self.mainWindowUI.FileConversion.convertTypeDropDown.currentIndexChanged.connect(lambda x: self.setTargetFileFormat())
 
         
 
@@ -92,18 +92,18 @@ class MainWidget(QtWidgets.QMainWindow): #Main Class
         tkinter.Tk().withdraw() # prevents an empty tkinter window from appearing
         self.sourceFileDirectory = filedialog.askopenfilename()
 
-        self.mainWindowUI.labelTest.setText("Source File Path: \n" + self.sourceFileDirectory)
+        self.mainWindowUI.FileConversion.labelTest.setText("Source File Path: \n" + self.sourceFileDirectory)
 
     @QtCore.Slot()   
     def selectDestinationPath(self):
         tkinter.Tk().withdraw() # prevents an empty tkinter window from appearing
         self.targetFileDirectory = filedialog.askdirectory()
         
-        self.mainWindowUI.labelTest2.setText("Target File Path: \n" + self.targetFileDirectory)
+        self.mainWindowUI.FileConversion.labelTest2.setText("Target File Path: \n" + self.targetFileDirectory)
 
     @QtCore.Slot()
     def setTargetFileFormat(self):
-        self.targetFileFormat = "." + self.mainWindowUI.convertTypeDropDown.currentText()
+        self.targetFileFormat = "." + self.mainWindowUI.FileConversion.convertTypeDropDown.currentText()
 
 
 #Multithreading

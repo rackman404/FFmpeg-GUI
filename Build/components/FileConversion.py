@@ -3,10 +3,12 @@ from PySide6 import QtCore, QtWidgets, QtGui
 import PySide6.QtCore
 import PySide6.QtWidgets
 
-class mainWindowUI(object):
-    def setup(self, MainWindow):
-        if not MainWindow.objectName():
-            MainWindow.setObjectName(u"MainWindow")
+
+
+class FileConversionUI(object):
+    def setup(self, FileConversion):
+        #if not FileConversion.objectName():
+        #    FileConversion.setObjectName(u"FiieConversion")
 
         self.buttonTest = QtWidgets.QPushButton()
         self.buttonTest.setText("Convert to Mp3")
@@ -30,11 +32,13 @@ class mainWindowUI(object):
         self.labelTest2 = QtWidgets.QLabel()
         self.labelTest2.setText("Target File Path:")
 
-        self.mainLayout = QtWidgets.QGridLayout()
-        self.mainLayout.addWidget(self.buttonTest, 1, 1)
-        self.mainLayout.addWidget(self.buttonTest2, 1, 0)
-        self.mainLayout.addWidget(self.buttonTest3, 1, 2)
 
-        self.mainLayout.addWidget(self.labelTest, 0, 0)
-        self.mainLayout.addWidget(self.labelTest2, 0, 2)
-        self.mainLayout.addWidget(self.convertTypeDropDown, 2, 1)
+        self.conversionLayoutContainer = QtWidgets.QWidget()
+        self.conversionLayout = QtWidgets.QGridLayout(self.conversionLayoutContainer)
+        self.conversionLayout.addWidget(self.buttonTest, 1, 1)
+        self.conversionLayout.addWidget(self.buttonTest2, 1, 0)
+        self.conversionLayout.addWidget(self.buttonTest3, 1, 2)
+
+        self.conversionLayout.addWidget(self.labelTest, 0, 0)
+        self.conversionLayout.addWidget(self.labelTest2, 0, 2)
+        self.conversionLayout.addWidget(self.convertTypeDropDown, 2, 1)
